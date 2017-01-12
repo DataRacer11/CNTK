@@ -1606,11 +1606,11 @@ ElemType Matrix<ElemType>::RmsProp(Matrix<ElemType>& gradients,
 {
     DecideAndMoveToRightDevice(*this, gradients);
 
-    DISPATCH_MATRIX_ON_FLAG(this, &gradients,
+    DISPATCH_MATRIX_ON_FLAG(&gradients, &gradients,
         { return m_CPUMatrix->RmsProp(*gradients.m_CPUMatrix, RMS_GAMMA, RMS_WGT_INC, RMS_WGT_MAX, RMS_WGT_DEC, RMS_WGT_MIN, needAveMultiplier); SetDataLocation(CPU); },
         { return m_GPUMatrix->RmsProp(*gradients.m_GPUMatrix, RMS_GAMMA, RMS_WGT_INC, RMS_WGT_MAX, RMS_WGT_DEC, RMS_WGT_MIN, needAveMultiplier); SetDataLocation(GPU); },
         { NOT_IMPLEMENTED; },
-        { NOT_IMPLEMENTED; });
+        { return gradients.m_GPUSparseMatrix->RmsProp(*m_GPUMatrix, RMS_GAMMA, RMS_WGT_INC, RMS_WGT_MAX, RMS_WGT_DEC, RMS_WGT_MIN, needAveMultiplier); });
     // Note: Since both 'this' and gradients are changed, we must call SetDataLocation() on 'this' as well.
 }
 
