@@ -14,9 +14,9 @@ using namespace Microsoft::MSR::CNTK;
 
 namespace Microsoft { namespace MSR { namespace CNTK { namespace Test {
 
-BOOST_AUTO_TEST_SUITE(MatrixLearnerTests)
+BOOST_AUTO_TEST_SUITE(MatrixLearnerSuite)
 
-BOOST_FIXTURE_TEST_CASE(FSAdagradTest, RandomSeedFixture)
+BOOST_FIXTURE_TEST_CASE(FSAdagrad, RandomSeedFixture)
 {
     // compare dense and sparse result
     const size_t dim1 = 256;
@@ -41,7 +41,7 @@ BOOST_FIXTURE_TEST_CASE(FSAdagradTest, RandomSeedFixture)
     SingleMatrix matG2 = SingleMatrix::RandomGaussian(dim1, dim3, c_deviceIdZero, -1.0f, 1.0f, IncrementCounter());
 
     SingleMatrix matG(c_deviceIdZero);
-    SingleMatrix::MultiplyAndAdd(matG2, false, matG1, true, matG);
+    SingleMatrix::MultiplyAndWeightedAdd(1, matG2, false, matG1, true, 0, matG);
 
     SingleMatrix matGsparseBSC(c_deviceIdZero);
     matGsparseBSC.SwitchToMatrixType(MatrixType::SPARSE, matrixFormatSparseBlockCol, false);
